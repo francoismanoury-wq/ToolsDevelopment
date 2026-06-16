@@ -1,6 +1,6 @@
-BAUBION Alexis :
-BOURCET Gwenael :
-MANOURY Francois :
-POUPEAU--AVALLART Nathan :
-TORRES Alejandro :
-VIE Pierre :
+BAUBION Alexis : Test designer
+BOURCET Gwenael : API tester
+MANOURY Francois : Documentation lead
+POUPEAU--AVALLART Nathan : Test manager
+TORRES Alejandro : Automation tester
+VIE Pierre : Repository lead
