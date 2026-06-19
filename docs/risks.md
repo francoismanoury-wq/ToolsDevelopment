@@ -54,7 +54,7 @@ According to the Activo README, the weather widget (which shows a live forecast 
 
 Activo uses a PostgreSQL database that persists data in a Docker volume (`pgdata`). Test cases that create activities, join events, or register users modify the database permanently. If a previous test run left unexpected data (e.g. a full activity, a duplicate user), subsequent test cases may fail for reasons unrelated to the feature being tested.
 
-**Why it matters:** TC-012 (join full activity) and TC-013 (badge on first join) both depend on a specific database state. Running them on a dirty database produces unreliable results.
+**Why it matters:** Join full activity test and badge on first join test both depend on a specific database state. Running them on a dirty database produces unreliable results.
 
 ---
 
