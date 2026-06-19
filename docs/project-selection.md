@@ -52,9 +52,12 @@
 
 ## Risks
 
-| Risk | Impact | Mitigation |
-|------|--------|-----------|
-| Local Docker setup required | Teammates may not run the app | Document setup steps clearly |
-| No public API | Lab 6 uses JSONPlaceholder as substitute | Agreed substitute documented |
-| UI may change if repo is updated | Selenium selectors could break | Pin to a specific commit |
-| Dynamic element IDs | Locators may be unstable | Use stable `data-testid` attributes |
+| ID | Risk | Level | Mitigation |
+|----|------|-------|-----------|
+| R-01 | Docker required to run the app — teammates without Docker cannot execute tests | 🔴 High | Document setup steps; verify each teammate can run `docker compose up` |
+| R-02 | Activo API is only locally accessible — no cloud endpoint for Lab 6 | 🟡 Medium | Use JSONPlaceholder as API testing substitute |
+| R-03 | Activo is an external repo — UI may change without notice and break Selenium selectors | 🔴 High | Pin tests to a specific commit; avoid hardcoded class names |
+| R-04 | OpenWeatherMap API key required for the weather widget — disabled without it | 🟢 Low | Exclude weather widget from test scope |
+| R-05 | Database state persists between test runs — dirty data can cause false failures | 🟡 Medium | Reset DB before each session: `docker compose down -v && docker compose up --build` |
+
+> Full risk explanations in [`docs/risks.md`](risks.md)
