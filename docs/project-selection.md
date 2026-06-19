@@ -1,39 +1,60 @@
-
 # Project Selection
 
-## Project name
-Activo
+---
 
-## Project URL
-https://github.com/JesusAlejandroTM/Activo
+## Selected Project
 
-## Application type
-Web (self-hosted) + API sandbox (JSONPlaceholder)
+| | |
+|---|---|
+| **Name** | Activo |
+| **URL** | https://github.com/JesusAlejandroTM/Activo |
+| **Type** | Web (self-hosted) + API sandbox (JSONPlaceholder) |
 
-## Main functionality
-Activo is an asset management web application. It allows users to manage
-physical assets, assign them to people, track their location and status.
+---
 
-## Features selected for testing
-1. User Login – valid credentials, invalid credentials, empty fields
-2. Asset Creation – create a new asset, missing required fields, duplicate names
-3. Asset Search / Filter – search by name, category, status
-4. Asset Assignment – assign an asset to a user, re-assign, unassign
-5. Asset Status Update – change status (active/inactive/maintenance)
+## What is Activo?
 
-## Manual testing possibilities
-- Login form: positive and negative scenarios
-- Asset form validation: required fields, invalid data
+> Activo is a community web application for discovering, hosting, and joining local group activities — hiking trips, jazz nights, sports events, and more. Users register, create activities with capacity limits and GPS coordinates, join others, vote, comment, chat in real time, and earn achievement badges.
+
+**Tech stack:** Vue 3 · FastAPI · PostgreSQL · Docker · nginx · JWT auth
+
+---
+
+## Features Selected for Testing
+
+| # | Feature | Scenarios |
+|---|---------|-----------|
+| 1 | **User Authentication** | Valid login, wrong password, empty fields, new registration |
+| 2 | **Activity Creation** | All fields valid, missing required fields, invalid capacity |
+| 3 | **Activity Search / Filter** | Search by name, filter by category/status, no results |
+| 4 | **Join / Leave Activity** | Join, leave, re-join, join when full |
+| 5 | **Badge System** | First Step, Host, Explorer — automatic award on trigger |
+
+---
+
+## Testing Opportunities
+
+### Manual Testing
+- Login form: positive and negative scenarios (EP technique)
+- Activity form validation: required fields, boundary values
 - Search: exact match, partial match, no results
-- Role-based access: admin vs standard user
+- Role-based access: user vs moderator vs admin
 
-## Automation possibilities
-- Selenium (Lab 4): Login flow, asset creation form, search
-- Robot Framework (Lab 5): End-to-end asset lifecycle
-- Postman (Lab 6): JSONPlaceholder – GET/POST/PUT/DELETE + status codes
+### Automation Candidates
+
+| Lab | Tool | Use Case |
+|-----|------|----------|
+| Lab 4 | Selenium | Login flow, activity creation form, join workflow |
+| Lab 5 | Robot Framework | End-to-end activity lifecycle |
+| Lab 6 | Postman | JSONPlaceholder — GET/POST/PUT/DELETE + status codes |
+
+---
 
 ## Risks
-- Activo requires local setup – teammates may not run it easily
-- No public API – using JSONPlaceholder for Lab 6
-- UI may change if repo is updated – Selenium selectors could break
-- Dynamic element IDs may make Selenium locators unstable
+
+| Risk | Impact | Mitigation |
+|------|--------|-----------|
+| Local Docker setup required | Teammates may not run the app | Document setup steps clearly |
+| No public API | Lab 6 uses JSONPlaceholder as substitute | Agreed substitute documented |
+| UI may change if repo is updated | Selenium selectors could break | Pin to a specific commit |
+| Dynamic element IDs | Locators may be unstable | Use stable `data-testid` attributes |

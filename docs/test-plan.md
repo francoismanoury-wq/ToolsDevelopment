@@ -1,17 +1,15 @@
 # Test Plan — Activo Web Application
-## Lab 3: Test Design and Test Management
 
-**Team:** AFGANP  
-**Date:** 2026-06-19  
-**Version:** 1.0
+**Lab 3: Test Design and Test Management**  
+**Team:** AFGANP | **Date:** 2026-06-19 | **Version:** 1.0
 
 ---
 
 ## 1. Introduction
 
-Activo is a full-stack community web application that lets users discover, host, and join local group activities (hiking trips, jazz nights, sports events, etc.). It is built on Vue 3 (frontend), FastAPI/PostgreSQL (backend), deployed via Docker Compose with an nginx reverse proxy.
+> Activo is a full-stack community web application built on **Vue 3** (frontend), **FastAPI + PostgreSQL** (backend), deployed via **Docker Compose** with an nginx reverse proxy. Users discover, create, and join local group activities, vote, comment, chat in real time, and earn achievement badges.
 
-This test plan covers manual test design for Lab 3. It defines what will be tested, how, and under which conditions.
+This test plan defines **what** will be tested, **how**, and **under which conditions** for Lab 3 manual testing.
 
 ---
 
@@ -21,47 +19,46 @@ This test plan covers manual test design for Lab 3. It defines what will be test
 
 | # | Feature | Priority |
 |---|---------|----------|
-| 1 | User Authentication — register, login, logout, wrong credentials | High |
-| 2 | Activity Creation — form validation, required fields, capacity | High |
-| 3 | Activity Discovery — browse, filter by category/date/status, search | High |
-| 4 | Join / Leave Activity — state changes, capacity enforcement | High |
-| 5 | Vote on Activity — toggle vote (vote / unvote) | Medium |
-| 6 | Comment on Activity — post, display, delete own comment | Medium |
-| 7 | Badge System — automatic badge award on trigger actions | Medium |
-| 8 | Role-Based Access — user vs moderator vs admin permissions | High |
+| 1 | User Authentication — register, login, logout, wrong credentials | 🔴 High |
+| 2 | Activity Creation — form validation, required fields, capacity | 🔴 High |
+| 3 | Activity Discovery — browse, filter by category / date / status | 🔴 High |
+| 4 | Join / Leave Activity — state changes, capacity enforcement | 🔴 High |
+| 5 | Vote on Activity — toggle vote / unvote | 🟡 Medium |
+| 6 | Comment on Activity — post, display, delete own comment | 🟡 Medium |
+| 7 | Badge System — automatic award on trigger actions | 🟡 Medium |
+| 8 | Role-Based Access — user vs moderator vs admin | 🔴 High |
 
-### Out of Scope (Lab 3)
+### Out of Scope
 
-- Real-time chat (WebSocket) — covered in Lab 5 (Robot Framework E2E)
-- Photo gallery — dependent on base64 upload, deferred to exploratory testing
-- Weather widget — depends on external API key, not testable in CI
-- Calendar / .ics export — deferred to later labs
-- Analytics dashboard — host-only feature, deferred to later labs
+| Feature | Reason | Planned Lab |
+|---------|--------|-------------|
+| Real-time chat (WebSocket) | Requires async tooling | Lab 5 (Robot Framework) |
+| Photo gallery | Base64 upload, not representative for manual | Exploratory |
+| Weather widget | External API key required | — |
+| Calendar / .ics export | Low priority for manual coverage | Later labs |
+| Analytics dashboard | Host-only, deferred | Later labs |
 
 ---
 
 ## 3. Test Approach
 
-### Testing Types
-
-| Type | Description | Coverage |
-|------|-------------|---------|
-| Functional | Verify each feature behaves as specified | Primary |
-| Negative | Test with invalid / unexpected inputs | Primary |
-| Boundary | Test at and around valid range limits | Primary |
-| Role-based | Test same action under different user roles | Secondary |
-
 ### Test Design Techniques
 
-1. **Equivalence Partitioning (EP)** — Divide login/registration inputs into valid and invalid classes; test one representative from each class instead of exhaustive combinations.
-2. **Boundary Value Analysis (BVA)** — Test capacity field at 0, 1, and max; test title/description at minimum and maximum allowed lengths.
-3. **State Transition Testing** — Model the Join/Leave lifecycle: `not joined → joined → left → re-joined`. Also used for badge state: `locked → earned`.
-4. **Use Case Testing** — Walk through complete user workflows end-to-end (registration → login → create activity → join another's activity).
+| Technique | Applied To |
+|-----------|-----------|
+| **Equivalence Partitioning (EP)** | Login / registration inputs — valid vs invalid classes |
+| **Boundary Value Analysis (BVA)** | `max_participants` field (0, 1, max); title length (1 char, empty) |
+| **State Transition** | Join → Leave → Rejoin lifecycle; badge locked → earned |
+| **Use Case Testing** | Full workflows: register → login → create → join |
 
-### Test Levels
+### Test Types
 
-- **Manual tests only** for this lab (13 test cases)
-- Selenium automation candidates identified (TC-001, TC-008, TC-010) — to be implemented in Lab 4
+| Type | Goal |
+|------|------|
+| Functional | Verify features behave as specified |
+| Negative | Test system response to invalid / unexpected inputs |
+| Boundary | Test at and around value range limits |
+| Workflow | Walk through end-to-end user journeys |
 
 ---
 
@@ -70,25 +67,26 @@ This test plan covers manual test design for Lab 3. It defines what will be test
 | Item | Value |
 |------|-------|
 | Application URL | http://localhost:5173 |
-| API (Swagger) | http://localhost:8000/docs |
-| Launch command | `docker compose up --build` (first run ~60 s) |
+| API / Swagger UI | http://localhost:8000/docs |
+| Launch command | `docker compose up --build` |
+| First startup | ~60 seconds (migrations + seed) |
 | OS | Windows 11 |
 | Browser | Google Chrome (latest) |
-| DB | PostgreSQL 16 (Docker volume `pgdata`) |
+| Database | PostgreSQL 16 (Docker volume `pgdata`) |
 
 ### Test Accounts
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@activo.app | activo123 |
-| Moderator | maria@activo.app | activo123 |
-| Regular user | nathan@activo.app | activo123 |
-| Regular user | paul@activo.app | activo123 |
+| Admin | `admin@activo.app` | `activo123` |
+| Moderator | `maria@activo.app` | `activo123` |
+| User | `nathan@activo.app` | `activo123` |
+| User | `paul@activo.app` | `activo123` |
 
 ### Reset Procedure
 
-To return the database to a clean seed state:
 ```bash
+# Wipe database and re-seed
 docker compose down -v && docker compose up --build
 ```
 
@@ -98,34 +96,34 @@ docker compose down -v && docker compose up --build
 
 ### Entry Criteria
 
-- Docker Compose stack starts successfully (`docker compose up --build`)
-- Login page loads at http://localhost:5173
-- All four seed accounts are accessible with password `activo123`
-- Swagger UI is accessible at http://localhost:8000/docs
+- [ ] Docker Compose stack starts successfully
+- [ ] http://localhost:5173 loads the login page
+- [ ] All four seed accounts log in with `activo123`
+- [ ] Swagger UI accessible at http://localhost:8000/docs
 
 ### Exit Criteria
 
-- All 13 planned test cases have been executed
-- All High priority test cases pass or defects are filed
-- At least one defect report written for any found failure
-- Test results recorded with Actual Result and Status in the test case sheet
+- [ ] All 13 test cases executed
+- [ ] All High priority cases Pass **or** have a filed defect
+- [ ] At least one defect report written for each failure
+- [ ] Actual Result and Status filled in for every test case
 
 ---
 
-## 6. Test Deliverables and Schedule
+## 6. Deliverables and Schedule
 
-| Deliverable | File | Target Date |
-|-------------|------|-------------|
-| Test Plan (this document) | `docs/test-plan.md` | 2026-06-19 |
-| Test Case Template | `manual-tests/test-case-template.md` | 2026-06-19 |
-| Manual Test Cases (13 cases) | `manual-tests/manual-test-cases.md` | 2026-06-19 |
-| Defect Report | `reports/defect-report-example.md` | 2026-06-19 |
-| Selenium automation (Lab 4) | `automation/selenium/` | TBD |
+| Deliverable | File | Status |
+|-------------|------|--------|
+| Test Plan | `docs/test-plan.md` | ✅ Done |
+| Test Case Template | `manual-tests/test-case-template.md` | ✅ Done |
+| Manual Test Cases (13) | `manual-tests/manual-test-cases.md` | ✅ Done |
+| Defect Reports | `reports/defect-report-example.md` | ✅ Done |
+| Selenium automation | `automation/selenium/` | Upcoming — Lab 4 |
 
-### Automation Candidates for Lab 4
+### Selenium Automation Candidates (Lab 4)
 
-| Test Case | Reason |
-|-----------|--------|
-| TC-001 — Valid login | Repetitive, well-defined selectors, login critical path |
-| TC-008 — Create activity | Form with multiple fields, good Selenium exercise |
-| TC-010 — Full join workflow | Multi-step navigation, verifies UI state after action |
+| Test Case | Justification |
+|-----------|--------------|
+| TC-001 — Valid login | Critical path, stable form selectors |
+| TC-008 — Create activity | Multi-field form, core feature |
+| TC-010 — Join workflow | Multi-step navigation with state verification |

@@ -1,52 +1,71 @@
-# Lab 2 - Unit Testing Report
+# Lab 2 — Unit Testing Report
 
-**Team:** AFGANP  
-**Date:** 2026-06-18  
-**Tool:** JUnit 5.10.2 + IntelliJ IDEA Coverage Runner
+**Team:** AFGANP | **Date:** 2026-06-18 | **Tool:** JUnit 5.10.2 + IntelliJ IDEA Coverage Runner
 
-## 1. Tests written
+---
 
-| # | Test name | Type | Expected result |
-|---|-----------|------|-----------------|
-| 1 | shouldReturnAFor93Points | Normal | A |
-| 2 | shouldReturnAFor100Points | Normal | A |
-| 3 | shouldReturnBFor85Points | Boundary | B |
-| 4 | shouldReturnBFor92Points | Boundary | B |
-| 5 | shouldReturnEFor61Points | Boundary | E |
-| 6 | shouldReturnFXFor60Points | Boundary | FX |
-| 7 | shouldReturnFXFor0Points | Normal | FX |
-| 8 | shouldThrowExceptionForNegativePoints | Invalid input | Exception |
-| 9 | shouldThrowExceptionForMoreThan100Points | Invalid input | Exception |
+## 1. Tests Written
 
-**Total: 9 tests — all passing ✅**
+| # | Test Name | Type | Expected Result | Status |
+|---|-----------|------|-----------------|--------|
+| 1 | `shouldReturnAFor93Points` | Normal | A | ✅ Pass |
+| 2 | `shouldReturnAFor100Points` | Normal | A | ✅ Pass |
+| 3 | `shouldReturnBFor85Points` | Boundary | B | ✅ Pass |
+| 4 | `shouldReturnBFor92Points` | Boundary | B | ✅ Pass |
+| 5 | `shouldReturnEFor61Points` | Boundary | E | ✅ Pass |
+| 6 | `shouldReturnFXFor60Points` | Boundary | FX | ✅ Pass |
+| 7 | `shouldReturnFXFor0Points` | Normal | FX | ✅ Pass |
+| 8 | `shouldThrowExceptionForNegativePoints` | Invalid input | Exception | ✅ Pass |
+| 9 | `shouldThrowExceptionForMoreThan100Points` | Invalid input | Exception | ✅ Pass |
 
-## 2. Demonstrated failing test
+> **Total: 9 tests — all passing ✅**
 
-Changed `>= 85` to `> 85` in Rating.java temporarily.  
-Result: `shouldReturnBFor85Points` failed with:
-- Expected: B
-- Actual: C
+---
 
-This confirms the tests correctly detect boundary errors.
+## 2. Demonstrated Failing Test
 
-## 3. Coverage results
+To prove the test suite detects regressions, `>= 85` was temporarily changed to `> 85` in `Rating.java`:
 
-- Class: 100%
-- Method: 100%
-- Line: 100%
-- Branch: 85% (12/14)
+```java
+// Before (correct)
+if (points >= 85) return "B";
 
-## 4. Coverage interpretation
+// After (deliberately broken)
+if (points > 85) return "B";
+```
+
+**Result:** `shouldReturnBFor85Points` failed immediately:
+
+| | Value |
+|---|---|
+| Expected | `B` |
+| Actual | `C` |
+
+> This confirms the tests correctly detect off-by-one boundary errors.
+
+---
+
+## 3. Coverage Results
+
+| Metric | Coverage |
+|--------|---------|
+| Class | 100% |
+| Method | 100% |
+| Line | 100% |
+| Branch | 85% (12 / 14) |
+
+---
+
+## 4. Coverage Interpretation
 
 **What coverage proves:**
-- All branches of the method were executed at least once
-- Both exception paths (-1 and 101) were triggered
+- All branches of the grading method were executed at least once
+- Both exception paths (points = −1 and points = 101) were triggered
 
 **What coverage does NOT prove:**
-- That boundary values are correctly defined
-- That the method meets real business requirements
-- Security, usability or performance
+- That boundary thresholds (85, 92, etc.) are correctly defined
+- That the method meets the real business grading requirements
+- Security, usability, or performance properties
 
 **Missing test idea:**  
-Testing `Integer.MIN_VALUE` would verify very large
-negative numbers are also rejected.
+Testing `Integer.MIN_VALUE` would verify that very large negative numbers are also rejected, improving branch coverage from 85% to 100%.

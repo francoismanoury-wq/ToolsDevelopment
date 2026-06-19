@@ -61,4 +61,5 @@ class RatingTest {
             rating.determineResultGrade(101);
         });
     }
+
 }
